@@ -110,7 +110,7 @@ dependencies = [
 [[package]]
 name = "apollo-router"
 version = "1.0.0-alpha.3"
-source = "git+https://github.com/apollographql/router?tag=v1.0.0-alpha.3#84d3b8d9c39025eafc51c7238df44a9dfa82d906"
+source = "git+https://github.com/apollographql/router?branch=main#702037afc4530589be36d0b9603a980e345af33a"
 dependencies = [
  "access-json",
  "anyhow",
@@ -122,6 +122,7 @@ dependencies = [
  "atty",
  "axum",
  "backtrace",
+ "base64 0.13.0",
  "buildstructor",
  "bytes",
  "clap",
@@ -165,6 +166,7 @@ dependencies = [
  "paste",
  "pin-project-lite",
  "prometheus",
+ "rand",
  "regex",
  "reqwest",
  "rhai",
@@ -194,6 +196,7 @@ dependencies = [
  "uname",
  "url",
  "urlencoding",
+ "uuid 1.1.2",
  "yaml-rust",
 ]
 
@@ -201,13 +204,26 @@ dependencies = [
 name = "apollo-router-repro"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "apollo-router",
+ "async-trait",
+ "dotenv",
+ "futures",
+ "http",
+ "jsonwebtoken",
+ "rhai",
+ "schemars",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower",
+ "tracing",
 ]
 
 [[package]]
 name = "apollo-spaceport"
 version = "1.0.0-alpha.3"
-source = "git+https://github.com/apollographql/router?tag=v1.0.0-alpha.3#84d3b8d9c39025eafc51c7238df44a9dfa82d906"
+source = "git+https://github.com/apollographql/router?branch=main#702037afc4530589be36d0b9603a980e345af33a"
 dependencies = [
  "bytes",
  "clap",
@@ -229,7 +245,7 @@ dependencies = [
 [[package]]
 name = "apollo-uplink"
 version = "1.0.0-alpha.3"
-source = "git+https://github.com/apollographql/router?tag=v1.0.0-alpha.3#84d3b8d9c39025eafc51c7238df44a9dfa82d906"
+source = "git+https://github.com/apollographql/router?branch=main#702037afc4530589be36d0b9603a980e345af33a"
 dependencies = [
  "futures",
  "graphql_client",
@@ -461,9 +477,9 @@ dependencies = [
 
 [[package]]
 name = "buildstructor"
-version = "0.4.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a7772d3542812693473268c2308979967035162dd36d053ec728e6c947ba93f"
+checksum = "54027423064fb9ead112911b05eccb6484070f5ec778610906458603e0673381"
 dependencies = [
  "lazy_static",
  "proc-macro2",
@@ -819,6 +835,12 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "dotenv"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
 name = "downcast"
@@ -1544,7 +1566,21 @@ dependencies = [
  "serde_json",
  "time",
  "url",
- "uuid",
+ "uuid 0.8.2",
+]
+
+[[package]]
+name = "jsonwebtoken"
+version = "8.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aa4b4af834c6cfd35d8763d359661b90f2e45d8f750a0849156c7f4671af09c"
+dependencies = [
+ "base64 0.13.0",
+ "pem",
+ "ring",
+ "serde",
+ "serde_json",
+ "simple_asn1",
 ]
 
 [[package]]
@@ -1857,7 +1893,7 @@ version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b8536030f9fea7127f841b45bb6243b27255787fb4eb83958aa1ef9d2fdc0c36"
 dependencies = [
- "num-bigint",
+ "num-bigint 0.2.6",
  "num-complex",
  "num-integer",
  "num-iter",
@@ -1870,6 +1906,17 @@ name = "num-bigint"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "090c7f9998ee0ff65aa5b723e4009f7b217707f1fb5ea551329cc4d6231fb304"
+dependencies = [
+ "autocfg",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "num-bigint"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f93ab6289c7b344a8a9f60f88d80aa20032336fe78da341afc91c8a2341fc75f"
 dependencies = [
  "autocfg",
  "num-integer",
@@ -1920,7 +1967,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5c000134b5dbf44adc5cb772486d335293351644b801551abe8f75c84cfa4aef"
 dependencies = [
  "autocfg",
- "num-bigint",
+ "num-bigint 0.2.6",
  "num-integer",
  "num-traits",
 ]
@@ -2158,6 +2205,15 @@ name = "paste"
 version = "1.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1de2e551fb905ac83f73f7aedf2f0cb4a0da7e35efa24a202a936269f1f18e1"
+
+[[package]]
+name = "pem"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "03c64931a1a212348ec4f3b4362585eca7159d0d09cbdf4a7f74f02173596fd4"
+dependencies = [
+ "base64 0.13.0",
+]
 
 [[package]]
 name = "percent-encoding"
@@ -2504,9 +2560,9 @@ checksum = "4389f1d5789befaf6029ebd9f7dac4af7f7e3d61b69d4f30e2ac02b57e7712b0"
 
 [[package]]
 name = "rhai"
-version = "1.10.0"
+version = "1.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "863c895db914cfbef71203b027f6336c00c9aed51c985c484584c37dd0375c51"
+checksum = "3819cc705765a6def80466451e5e20053a536f940fa8c7ea3688a7e554a7dc89"
 dependencies = [
  "ahash 0.8.0",
  "bitflags",
@@ -2916,6 +2972,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "simple_asn1"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "adc4e5204eb1910f40f9cfa375f6f05b68c3abac4b6fd879c8ff5e7ae8a0a085"
+dependencies = [
+ "num-bigint 0.4.3",
+ "num-traits",
+ "thiserror",
+ "time",
+]
+
+[[package]]
 name = "slab"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3158,6 +3226,7 @@ version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c3f9a28b618c3a6b9251b6908e9c99e04b9e5c02e6581ccbb67d59c34ef7f9b"
 dependencies = [
+ "itoa",
  "libc",
  "num_threads",
  "time-macros",
@@ -3632,6 +3701,16 @@ name = "uuid"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+
+[[package]]
+name = "uuid"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dd6469f4314d5f1ffec476e05f17cc9a78bc7a27a6a857842170bdf8d6f98d2f"
+dependencies = [
+ "getrandom",
+ "serde",
+]
 
 [[package]]
 name = "v8"
